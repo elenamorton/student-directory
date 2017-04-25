@@ -1,3 +1,4 @@
+#!/usr/bin/ruby
 
 # students = [
 #    {name: "Dr. Hannibal Lecter", cohort: :november},
@@ -43,9 +44,11 @@ end
 
 # print student names method
 def print(students)
-    i = 0 
+    i = 0
+    align_size = 20
     while i < students.length
-        puts "#{i + 1}. #{students[i][:name]} (#{students[i][:cohort]} cohort) "
+        stud = (students[i][:name]).center(align_size)
+        puts "#{i + 1}. #{stud} (#{students[i][:cohort]} cohort) "
         i += 1
     end
 ##    students.each_with_index do |student, index|
