@@ -43,15 +43,19 @@ end
 
 # print student names method
 def print(students)
-    students.each_with_index do |student, index|
-        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort) "
+    i = 0 
+    while i < students.length
+        puts "#{i + 1}. #{students[i][:name]} (#{students[i][:cohort]} cohort) "
+        i += 1
     end
+##    students.each_with_index do |student, index|
+##        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort) "
 end 
 
 # print only students that have name starting with specific letter
 def print_with_letter(students, letter)
     i = 1
-    puts "Student names starting with #{letter}"
+    puts "Student names starting with letter - #{letter.to_s}:"
     students.each do |student|
         if student[:name].chars.first == letter
             puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort) "
@@ -64,7 +68,7 @@ end
 SIZE = 12
 def print_less12(students)
     i = 1
-    puts "Student names with 12 chars or less"
+    puts "Student names with 12 chars or less:"
     students.each do |student|
         if student[:name].size <= SIZE
             puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort) "
