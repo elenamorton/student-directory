@@ -16,18 +16,34 @@
 
 
 def input_students
-    puts "Please, enter the name of the students" 
+    puts "Please, enter the name of the students, and cohort." 
     puts "To finish, hit <return> twice"
    
     # create an empty array
     students = []
+    cohorts = ['january', 'february', 'march', 'april', 'may', 'june', 'july',
+    'august', 'september', 'october', 'november', 'december']
     # get the first name
+    puts "Please, enter the name of a student:"
     name = gets.chomp
     # while name not empty repeat this code
     while !name.empty? do
+        
+        ##add inner loop for cohort entry
+        puts "Please, enter the cohort:"
+        cohort = gets.chomp.downcase
+        #p cohort, cohorts
         # add the student hash to the array
-        students << {name: name, cohort: :november}
+        if cohorts.include? cohort
+            students << {name: name, cohort: cohort.to_sym}
+            #p students
+        else
+            students << {name: name, cohort: :none}
+            #p students
+        end
+        #p students.count
         puts "Now we have #{students.count} students"
+        #puts students.count == 1 ? " student" : " students"
         
         # get another name from the user
         name = gets.chomp
@@ -65,6 +81,7 @@ def print_with_letter(students, letter)
             i += 1
         end
     end
+    puts
 end
 
 # print only students that have name less than 12 chars
@@ -78,15 +95,18 @@ def print_less12(students)
             i += 1
         end
     end
+    puts
 end
 
 # print total number method
 def print_footer(students)
     puts "Overall, we have #{students.count} great students"
+    puts
 end
 
 #calling the methods here
 students = input_students
+p students
 print_header
 print(students)
 print_footer(students)
