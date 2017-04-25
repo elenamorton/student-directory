@@ -48,6 +48,15 @@ def print(students)
     end
 end 
 
+# print only students that have name starting with specifuc letter
+def print_letter(students, letter)
+    students.each do |student|
+        if student[:name].chars.first == letter
+            puts "#{student[:name]} (#{student[:cohort]} cohort) "
+        end
+    end
+end
+    
 # print total number method
 def print_footer(students)
     puts "Overall, we have #{students.count} great students"
@@ -58,3 +67,5 @@ students = input_students
 print_header
 print(students)
 print_footer(students)
+
+print_letter(students, "A")
