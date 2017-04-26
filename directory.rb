@@ -14,40 +14,47 @@
 #    {name: "Norman Bates", cohort: :november}
 #    ]
 
-def interactive_menu
-    students = []
-    loop do
-        #1. print the menu and show the user what to do
-        puts "1. Input the students. "
-        puts "2. Show the students"
-        puts "9. Exit"
-        
-        #2. read the selection and save it into a variable
-        selection = gets.chomp
-       
-        #3. do what the user has asked.
-        case selection
-        when "1"
-            # input the students
-            input_students(students)
-            p students
-        when "2"
-            # show the students
-            print_header
-            print_all(students)
-            print_footer(students)
+@students = [] #global variable accesible to all methods
+
+def print_menu
+    puts "1. Input the students. "
+    puts "2. Show the students"
+    puts "9. Exit"
+end 
+
+def show_students
+    print_header
+    print_students_list
+    print_footer
+end 
+
+def process(selection)
+    case selection
+    when "1"
+        # input the students
+        input_students
+        p @students
+    when "2"
+        # show the students
+        show_students
             
-        when "9"
-            exit # this will cause the program to terminate
-        else
-            puts "I don't know what thsi means, try again"
-        end
-        
+    when "9"
+        exit # this will cause the program to terminate
+    else
+        puts "I don't know what thsi means, try again"
+    end
+end 
+
+
+def interactive_menu
+    loop do
+        print_menu
+        process(gets.chomp)
     end
 end
 
 # populate the students list
-def input_students(students)
+def input_students
     puts "Please, enter the name of the students, and cohort." 
     puts "To finish, hit <return> twice"
    
@@ -70,10 +77,10 @@ def input_students(students)
         # add the student hash to the array
         if cohorts.include? cohort
             cohort = cohort.to_sym
-            #p students
+            #p @students
         else
             cohort = :none
-            #p students
+            #p @students
         end
         
         ##add country entry
@@ -81,18 +88,18 @@ def input_students(students)
         country_birth = gets.chomp.capitalize
 
         # add the student hash to the array
-        students << {name: name, cohort: cohort, country: country_birth}
+        @students << {name: name, cohort: cohort, country: country_birth}
         #p students.count
         
-        print "Now we have #{students.count} "
-        puts students.count == 1 ? "student" : "students"
+        print "Now we have #{@students.count} "
+        puts @students.count == 1 ? "student" : "students"
         
         # get another name from the user
         puts "Please, enter the name of a student:"
         name = gets.chomp
     end
     # return the array of students
-    students
+    @students
 end 
 
 # print header method
@@ -102,21 +109,22 @@ def print_header
 end 
 
 # print student names method
-def print_all(students)
+def print_students_list
+    return if @students.count == 0
     i = 0
     align_size = 20
-    while i < students.length
-        stud = (students[i][:name]).center(align_size)
-        puts "#{i + 1}. #{stud} (#{students[i][:cohort]} cohort), from #{students[i][:country]} "
+    while i < @students.length
+        stud = (@students[i][:name]).center(align_size)
+        puts "#{i + 1}. #{stud} (#{@students[i][:cohort]} cohort), from #{@students[i][:country]} "
         i += 1
     end
 end 
 
 # print student names grouped by cohort 
-def print_by_cohort(students, cohort)
-    return if students.count == 0
+def print_by_cohort(cohort)
+    return if @students.count == 0
     names = []
-    students.select do |student| 
+    @students.select do |student| 
         if student[:cohort] == cohort
                 names.push student[:name]
         end
@@ -127,11 +135,11 @@ def print_by_cohort(students, cohort)
 end 
 
 # print only students that have name starting with specific letter
-def print_with_letter(students, letter)
-    return if students.count == 0
+def print_with_letter(letter)
+    return if @students.count == 0
     i = 1
     puts "Student names starting with letter - #{letter.to_s}:"
-    students.each do |student|
+    @students.each do |student|
         if student[:name].chars.first == letter
             puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort) "
             i += 1
@@ -142,11 +150,11 @@ end
 
 # print only students that have name less than 12 chars
 SIZE = 12
-def print_less12(students)
-    return if students.count == 0
+def print_less12
+    return if @students.count == 0
     i = 1
     puts "Student names with 12 chars or less:"
-    students.each do |student|
+    @students.each do |student|
         if student[:name].size <= SIZE
             puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort) "
             i += 1
@@ -156,8 +164,8 @@ def print_less12(students)
 end
 
 # print total number method
-def print_footer(students)
-    puts "Overall, we have #{students.count} great students"
+def print_footer
+    puts "Overall, we have #{@students.count} great students"
     puts
 end
 
@@ -166,9 +174,9 @@ interactive_menu
 
 #students = input_students
 #print_header
-#print_all(students)
-#print_footer(students)
+#print_students_list
+#print_footer
 
-print_with_letter(students, "A")
-print_less12(students)
-print_by_cohort(students, :may)
+print_with_letter("A")
+print_less12
+print_by_cohort(:may)
