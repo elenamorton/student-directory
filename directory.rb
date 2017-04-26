@@ -23,6 +23,7 @@ def input_students
     students = []
     cohorts = ['january', 'february', 'march', 'april', 'may', 'june', 'july',
     'august', 'september', 'october', 'november', 'december']
+    
     # get the first name
     puts "Please, enter the name of a student:"
     name = gets.chomp
@@ -33,6 +34,7 @@ def input_students
         puts "Please, enter the cohort:"
         cohort = gets.chomp.downcase
         #p cohort, cohorts
+        
         # add the student hash to the array
         if cohorts.include? cohort
             cohort = cohort.to_sym
@@ -50,10 +52,11 @@ def input_students
         students << {name: name, cohort: cohort, country: country_birth}
         #p students.count
         
-        puts "Now we have #{students.count} students"
-        #puts students.count == 1 ? " student" : " students"
+        print "Now we have #{students.count} "
+        puts students.count == 1 ? "student" : "students"
         
         # get another name from the user
+        puts "Please, enter the name of a student:"
         name = gets.chomp
     end
     # return the array of students
@@ -67,7 +70,7 @@ def print_header
 end 
 
 # print student names method
-def print(students)
+def print_all(students)
     i = 0
     align_size = 20
     while i < students.length
@@ -119,7 +122,7 @@ end
 students = input_students
 p students
 print_header
-print(students)
+print_all(students)
 print_footer(students)
 
 print_with_letter(students, "A")
