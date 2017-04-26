@@ -87,6 +87,7 @@ end
 
 # print only students that have name starting with specific letter
 def print_with_letter(students, letter)
+    return if students.count == 0
     i = 1
     puts "Student names starting with letter - #{letter.to_s}:"
     students.each do |student|
@@ -101,6 +102,7 @@ end
 # print only students that have name less than 12 chars
 SIZE = 12
 def print_less12(students)
+    return if students.count == 0
     i = 1
     puts "Student names with 12 chars or less:"
     students.each do |student|
