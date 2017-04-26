@@ -35,13 +35,21 @@ def input_students
         #p cohort, cohorts
         # add the student hash to the array
         if cohorts.include? cohort
-            students << {name: name, cohort: cohort.to_sym}
+            cohort = cohort.to_sym
             #p students
         else
-            students << {name: name, cohort: :none}
+            cohort = :none
             #p students
         end
+        
+        ##add country entry
+        puts "Please, enter the country of birth:"
+        country_birth = gets.chomp.capitalize
+
+        # add the student hash to the array
+        students << {name: name, cohort: cohort, country: country_birth}
         #p students.count
+        
         puts "Now we have #{students.count} students"
         #puts students.count == 1 ? " student" : " students"
         
@@ -64,11 +72,14 @@ def print(students)
     align_size = 20
     while i < students.length
         stud = (students[i][:name]).center(align_size)
-        puts "#{i + 1}. #{stud} (#{students[i][:cohort]} cohort) "
+        puts "#{i + 1}. #{stud} (#{students[i][:cohort]} cohort), from #{students[i][:country]} "
         i += 1
     end
-##    students.each_with_index do |student, index|
-##        puts "#{index + 1}. #{student[:name]} (#{student[:cohort]} cohort) "
+end 
+
+# print student names grouped by cohort method
+def print_by_cohort(students)
+    
 end 
 
 # print only students that have name starting with specific letter
@@ -113,3 +124,4 @@ print_footer(students)
 
 print_with_letter(students, "A")
 print_less12(students)
+print_by_cohort(students)
