@@ -80,9 +80,18 @@ def print_all(students)
     end
 end 
 
-# print student names grouped by cohort method
-def print_by_cohort(students)
-    
+# print student names grouped by cohort 
+def print_by_cohort(students, cohort)
+    return if students.count == 0
+    names = []
+    students.select do |student| 
+        if student[:cohort] == cohort
+                names.push student[:name]
+        end
+    end  
+    #p names
+    puts "The students in #{cohort.capitalize} cohort are as follows: "
+    names.each_index { |i| puts "#{i+1}. #{names[i]}" }
 end 
 
 # print only students that have name starting with specific letter
@@ -129,4 +138,4 @@ print_footer(students)
 
 print_with_letter(students, "A")
 print_less12(students)
-print_by_cohort(students)
+print_by_cohort(students, :may)
