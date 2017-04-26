@@ -26,7 +26,7 @@ def input_students
     
     # get the first name
     puts "Please, enter the name of a student:"
-    name = gets.chomp
+    name = gets.gsub("\n", '')
     # while name not empty repeat this code
     while !name.empty? do
         
