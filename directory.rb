@@ -19,13 +19,28 @@
 def print_menu
     puts "1. Input the students. "
     puts "2. Show the students"
-    puts "9. Exit"
+    puts "3. Save the list to students.cvs"
+    puts "9. Exit" # 9 because we'll be adding more items 
 end 
 
 def show_students
     print_header
     print_students_list
     print_footer
+end 
+
+# save the students list to students.cvs
+def save_students
+    return if @students.count == 0
+    # open the file for writing
+    file = File.open("students.cvs", "w")
+    
+    # iterate over the array of students
+    @students.each do |student|
+       cvs_line = [student[:name], student[:cohort]].join(",")
+       file.puts cvs_line 
+    end
+    file.close
 end 
 
 def process(selection)
@@ -37,7 +52,8 @@ def process(selection)
     when "2"
         # show the students
         show_students
-            
+    when "3"
+        save_students
     when "9"
         exit # this will cause the program to terminate
     else
