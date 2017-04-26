@@ -20,6 +20,7 @@ def print_menu
     puts "1. Input the students. "
     puts "2. Show the students"
     puts "3. Save the list to students.cvs"
+    puts "4. Load the list from students.cvs"
     puts "9. Exit" # 9 because we'll be adding more items 
 end 
 
@@ -43,6 +44,19 @@ def save_students
     file.close
 end 
 
+# load the students from the students.cvs file
+def load_students
+    # open the file for reading
+    file = File.open("students.cvs", "r")
+    return if !file
+    file.readlines.each do |line|
+        name, cohort = line.chomp.split(",")
+        @students << {name: name, cohort: cohort.to_sym}
+    end
+    file.close
+end
+
+# method to select the menu option
 def process(selection)
     case selection
     when "1"
@@ -53,7 +67,11 @@ def process(selection)
         # show the students
         show_students
     when "3"
+        # save the students to a cvs file
         save_students
+    when "4"
+        # load teh students from a cvs file
+        load_students
     when "9"
         exit # this will cause the program to terminate
     else
