@@ -31,10 +31,10 @@ def show_students
 end 
 
 # save the students list to students.cvs
-def save_students
+def save_students(filename = "students.cvs")
     return if @students.count == 0
     # open the file for writing
-    file = File.open("students.cvs", "w")
+    file = File.open(filename, "w")
     
     # iterate over the array of students
     @students.each do |student|
@@ -45,15 +45,33 @@ def save_students
 end 
 
 # load the students from the students.cvs file
-def load_students
+def load_students(filename)
     # open the file for reading
-    file = File.open("students.cvs", "r")
+    file = File.open(filename, "r")
     return if !file
     file.readlines.each do |line|
         name, cohort = line.chomp.split(",")
         @students << {name: name, cohort: cohort.to_sym}
     end
     file.close
+end
+
+# load the students from a file specified in the command line
+def try_load_students(filename = "students.cvs")
+    
+    if ARGV.first # first argument from the command line
+        filename = ARGV.first
+    end
+    
+    #return if filename.nil? # return if file name not given
+    
+    if File.exists?(filename) # check if file exists
+        load_students(filename)
+        puts "Loaded #{@students.count} students from #{filename} file"
+    else
+        puts "Sorry, #{filename} does not exist!"
+        exit # quit the program
+    end
 end
 
 # method to select the menu option
@@ -70,8 +88,8 @@ def process(selection)
         # save the students to a cvs file
         save_students
     when "4"
-        # load teh students from a cvs file
-        load_students
+        # load the students from a cvs file
+        try_load_students
     when "9"
         exit # this will cause the program to terminate
     else
@@ -83,7 +101,7 @@ end
 def interactive_menu
     loop do
         print_menu
-        process(gets.chomp)
+        process(STDIN.gets.chomp)
     end
 end
 
@@ -99,13 +117,13 @@ def input_students
     
     # get the first name
     puts "Please, enter the name of a student:"
-    name = gets.gsub("\n", '')
+    name = STDIN.gets.gsub("\n", '')
     # while name not empty repeat this code
     while !name.empty? do
         
         ##add inner loop for cohort entry
         puts "Please, enter the cohort:"
-        cohort = gets.chomp.downcase
+        cohort = STDIN.gets.chomp.downcase
         #p cohort, cohorts
         
         # add the student hash to the array
@@ -119,7 +137,7 @@ def input_students
         
         ##add country entry
         puts "Please, enter the country of birth:"
-        country_birth = gets.chomp.capitalize
+        country_birth = STDIN.gets.chomp.capitalize
 
         # add the student hash to the array
         @students << {name: name, cohort: cohort, country: country_birth}
@@ -130,7 +148,7 @@ def input_students
         
         # get another name from the user
         puts "Please, enter the name of a student:"
-        name = gets.chomp
+        name = STDIN.gets.chomp
     end
     # return the array of students
     @students
