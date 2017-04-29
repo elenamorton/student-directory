@@ -24,53 +24,10 @@ def print_menu
     puts "9. Exit" # 9 because we'll be adding more items 
 end 
 
-def show_students
-    print_header
-    print_students_list
-    print_footer
-end 
-
-# save the students list to students.cvs
-def save_students(filename = "students.cvs")
-    return if @students.count == 0
-    # open the file for writing
-    file = File.open(filename, "w")
-    
-    # iterate over the array of students
-    @students.each do |student|
-       cvs_line = [student[:name], student[:cohort]].join(",")
-       file.puts cvs_line 
-    end
-    file.close
-end 
-
-# load the students from the students.cvs file
-def load_students(filename)
-    # open the file for reading
-    file = File.open(filename, "r")
-    return if !file
-    file.readlines.each do |line|
-        name, cohort = line.chomp.split(",")
-        @students << {name: name, cohort: cohort.to_sym}
-    end
-    file.close
-end
-
-# load the students from a file specified in the command line
-def try_load_students(filename = "students.cvs")
-    
-    if ARGV.first # first argument from the command line
-        filename = ARGV.first
-    end
-    
-    #return if filename.nil? # return if file name not given
-    
-    if File.exists?(filename) # check if file exists
-        load_students(filename)
-        puts "Loaded #{@students.count} students from #{filename} file"
-    else
-        puts "Sorry, #{filename} does not exist!"
-        exit # quit the program
+def interactive_menu
+    loop do
+        print_menu
+        process(STDIN.gets.chomp)
     end
 end
 
@@ -89,28 +46,18 @@ def process(selection)
         save_students
     when "4"
         # load the students from a cvs file
-        try_load_students
+        load_students("students.cvs")
     when "9"
         exit # this will cause the program to terminate
     else
-        puts "I don't know what thsi means, try again"
+        puts "I don't know what this means, try again"
     end
 end 
 
-
-def interactive_menu
-    loop do
-        print_menu
-        process(STDIN.gets.chomp)
-    end
-end
-
-# populate the students list
+# populate the students list from the cmd. line
 def input_students
     puts "Please, enter the name of the students, and cohort." 
     puts "To finish, hit <return> twice"
-   
-    # create an empty array
 
     cohorts = ['january', 'february', 'march', 'april', 'may', 'june', 'july',
     'august', 'september', 'october', 'november', 'december']
@@ -129,10 +76,8 @@ def input_students
         # add the student hash to the array
         if cohorts.include? cohort
             cohort = cohort.to_sym
-            #p @students
         else
             cohort = :none
-            #p @students
         end
         
         ##add country entry
@@ -154,6 +99,56 @@ def input_students
     @students
 end 
 
+def show_students
+    print_header
+    print_students_list
+    print_footer
+end 
+
+# save the students list to students.cvs
+def save_students(filename = "students.cvs")
+    return if @students.count == 0
+    # open the file for writing
+    file = File.open(filename, "w")
+    
+    # iterate over the array of students
+    @students.each do |student|
+       cvs_line = [student[:name], student[:cohort]].join(",")
+       file.puts cvs_line 
+    end
+    file.close
+end 
+
+# load the students from the *.cvs file
+def load_students(filename)
+    # open the file for reading
+    file = File.open(filename, "r")
+    return if !file
+    file.readlines.each do |line|
+        name, cohort = line.chomp.split(",")
+        @students << {name: name, cohort: cohort.to_sym}
+    end
+    puts "Loaded #{@students.count} students from #{filename} file"
+    file.close
+end
+
+# load the students from a file specified in the command line
+def try_load_students(filename = "students.cvs")
+    #change to load students from "students.cvs"
+    if ARGV.first # first argument from the command line, 'nil' if no argument.
+        filename = ARGV.first
+    end
+    #return if filename.nil? # return if file name not given
+    
+    if File.exists?(filename) # check if file exists
+        load_students(filename)
+        #puts "Loaded #{@students.count} students from #{filename} file"
+    else
+        puts "Sorry, #{filename} does not exist!"
+        exit # quit the program
+    end
+end
+
 # print header method
 def print_header
     puts "The students of the Villan Academy"
@@ -171,6 +166,12 @@ def print_students_list
         i += 1
     end
 end 
+
+# print total number method
+def print_footer
+    puts "Overall, we have #{@students.count} great students"
+    puts
+end
 
 # print student names grouped by cohort 
 def print_by_cohort(cohort)
@@ -215,19 +216,10 @@ def print_less12
     puts
 end
 
-# print total number method
-def print_footer
-    puts "Overall, we have #{@students.count} great students"
-    puts
-end
-
 #calling the methods here
+try_load_students  #("none.cvs") - check for non-existent file
 interactive_menu
 
-#students = input_students
-#print_header
-#print_students_list
-#print_footer
 
 print_with_letter("A")
 print_less12
