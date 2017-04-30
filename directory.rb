@@ -38,21 +38,35 @@ def process(selection)
         # input the students
         input_students
         p @students
+        
     when "2"
         # show the students
         show_students
+        
     when "3"
         # save the students to a cvs file
-        save_students
+        save_students(enter_file)
+        
     when "4"
         # load the students from a cvs file
-        load_students("students.cvs")
+        load_students(enter_file)
+        
     when "9"
         exit # this will cause the program to terminate
+        
     else
         puts "I don't know what this means, try again"
     end
 end 
+
+def enter_file
+    puts "Please, enter a file name. Default file is 'students.cvs'."
+    filename = gets.chomp!
+    if filename.empty?
+        filename = "students.cvs"
+    end
+    filename
+end
 
 # populate the students list from the cmd. line
 def input_students
@@ -72,18 +86,15 @@ def input_students
         puts "Please, enter the cohort:"
         cohort = STDIN.gets.chomp.downcase
         #p cohort, cohorts
-        
         # add the student hash to the array
         if cohorts.include? cohort
             cohort = cohort.to_sym
         else
             cohort = :none
         end
-        
         ##add country entry
         puts "Please, enter the country of birth:"
         country_birth = STDIN.gets.chomp.capitalize
-
         # add the student hash to the array
         @students << {name: name, cohort: cohort, country: country_birth}
         #p students.count
@@ -95,8 +106,7 @@ def input_students
         puts "Please, enter the name of a student:"
         name = STDIN.gets.chomp
     end
-    # return the array of students
-    @students
+    @students # return the array of students
 end 
 
 def show_students
@@ -108,6 +118,7 @@ end
 # save the students list to students.cvs
 def save_students(filename = "students.cvs")
     return if @students.count == 0
+    p filename
     # open the file for writing
     file = File.open(filename, "w")
     
@@ -219,7 +230,6 @@ end
 #calling the methods here
 try_load_students  #("none.cvs") - check for non-existent file
 interactive_menu
-
 
 print_with_letter("A")
 print_less12
