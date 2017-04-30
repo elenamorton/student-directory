@@ -50,6 +50,10 @@ def process(selection)
     when "4"
         # load the students from a cvs file
         load_students(enter_file)
+    
+    when "5"
+        # clear the @students array befoare loading from a file, othertwise we keep adding to this structure!!!
+        clear_students_list
         
     when "9"
         exit # this will cause the program to terminate
@@ -62,10 +66,14 @@ end
 def enter_file
     puts "Please, enter a file name. Default file is 'students.cvs'."
     filename = gets.chomp!
-    if filename.empty?
+    if filename.empty? || !File.exists?(filename)
         filename = "students.cvs"
     end
     filename
+end
+
+def clear_students_list
+    # TODO
 end
 
 # populate the students list from the cmd. line
@@ -120,27 +128,29 @@ def save_students(filename = "students.cvs")
     return if @students.count == 0
     p filename
     # open the file for writing
-    file = File.open(filename, "w")
-    
-    # iterate over the array of students
-    @students.each do |student|
-       cvs_line = [student[:name], student[:cohort]].join(",")
-       file.puts cvs_line 
+    File.open(filename, "w") do |file|
+        # iterate over the array of students
+        @students.each do |student|
+            cvs_line = [student[:name], student[:cohort]].join(",")
+            file.puts cvs_line 
+        end
     end
-    file.close
 end 
 
 # load the students from the *.cvs file
 def load_students(filename)
     # open the file for reading
-    file = File.open(filename, "r")
-    return if !file
-    file.readlines.each do |line|
+    lines = File.open(filename, "r") do |file|
+        return if !file
+        file.readlines
+    end
+    lines.each do |line|
         name, cohort = line.chomp.split(",")
         @students << {name: name, cohort: cohort.to_sym}
     end
     puts "Loaded #{@students.count} students from #{filename} file"
-    file.close
+    
+    #file.close
 end
 
 # load the students from a file specified in the command line
