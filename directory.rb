@@ -21,6 +21,7 @@ def print_menu
     puts "2. Show the students"
     puts "3. Save the list to students.cvs"
     puts "4. Load the list from students.cvs"
+    puts "5. Erase the students list before any file loading"
     puts "9. Exit" # 9 because we'll be adding more items 
 end 
 
@@ -123,21 +124,21 @@ def show_students
     print_footer
 end 
 
-# save the students list to students.cvs
-def save_students(filename = "students.cvs")
+# save the students list to students.csv
+def save_students(filename = "students.csv")
     return if @students.count == 0
     p filename
     # open the file for writing
     File.open(filename, "w") do |file|
         # iterate over the array of students
         @students.each do |student|
-            cvs_line = [student[:name], student[:cohort]].join(",")
-            file.puts cvs_line 
+            csv_line = [student[:name], student[:cohort]].join(",")
+            file.puts csv_line 
         end
     end
 end 
 
-# load the students from the *.cvs file
+# load the students from the *.csv file
 def load_students(filename)
     # open the file for reading
     lines = File.open(filename, "r") do |file|
@@ -149,13 +150,11 @@ def load_students(filename)
         @students << {name: name, cohort: cohort.to_sym}
     end
     puts "Loaded #{@students.count} students from #{filename} file"
-    
-    #file.close
-end
+ end
 
 # load the students from a file specified in the command line
-def try_load_students(filename = "students.cvs")
-    #change to load students from "students.cvs"
+def try_load_students(filename = "students.csv")
+    #change to load students from "students.csv"
     if ARGV.first # first argument from the command line, 'nil' if no argument.
         filename = ARGV.first
     end
@@ -238,7 +237,7 @@ def print_less12
 end
 
 #calling the methods here
-try_load_students  #("none.cvs") - check for non-existent file
+try_load_students  #("none.csv") - check for non-existent file
 interactive_menu
 
 print_with_letter("A")
