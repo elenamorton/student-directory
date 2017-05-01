@@ -1,4 +1,5 @@
 #!/usr/bin/ruby
+require 'csv'
 
 # students = [
 #    {name: "Dr. Hannibal Lecter", cohort: :november},
@@ -19,8 +20,8 @@
 def print_menu
     puts "1. Input the students. "
     puts "2. Show the students"
-    puts "3. Save the list to students.cvs"
-    puts "4. Load the list from students.cvs"
+    puts "3. Save the list to students.csv"
+    puts "4. Load the list from students.csv"
     puts "5. Erase the students list before any file loading"
     puts "9. Exit" # 9 because we'll be adding more items 
 end 
@@ -45,12 +46,12 @@ def process(selection)
         show_students
         
     when "3"
-        # save the students to a cvs file
-        save_students(enter_file)
+        # save the students to a csv file
+        save_students_with_CSV(enter_file)
         
     when "4"
-        # load the students from a cvs file
-        load_students(enter_file)
+        # load the students from a csv file
+        load_students_with_CSV(enter_file)
     
     when "5"
         # clear the @students array befoare loading from a file, othertwise we keep adding to this structure!!!
@@ -65,16 +66,16 @@ def process(selection)
 end 
 
 def enter_file
-    puts "Please, enter a file name. Default file is 'students.cvs'."
+    puts "Please, enter a file name. Default file is 'students.csv'."
     filename = gets.chomp!
     if filename.empty? || !File.exists?(filename)
-        filename = "students.cvs"
+        filename = "students.csv"
     end
     filename
 end
 
 def clear_students_list
-    # TODO
+    @students = []
 end
 
 # populate the students list from the cmd. line
@@ -124,6 +125,34 @@ def show_students
     print_footer
 end 
 
+# save the students list to students.csv with CSV
+def save_students_with_CSV(filename = "students.csv")
+    return if @students.count == 0
+    p filename
+    # open the file for writing
+    CSV.open(filename, 'w') do |csv_object|
+        @students.each do |student_row|
+            csv_object << [student_row[:name], student_row[:cohort], student_row[:country]]
+            #p student_row, csv_object
+        end
+    end
+end 
+
+# load the students from the *.csv file with CSV
+def load_students_with_CSV(filename)
+    #clear @students structure
+    clear_students_list
+    
+    # open the file for reading
+    CSV.foreach(filename) do |student_row|
+        p student_row
+        @students << {name: student_row[0], cohort: student_row[1].to_sym, country: student_row[2]}
+    end
+    puts "Loaded #{@students.count} students from #{filename} file"
+    p @students
+end
+
+
 # save the students list to students.csv
 def save_students(filename = "students.csv")
     return if @students.count == 0
@@ -132,7 +161,7 @@ def save_students(filename = "students.csv")
     File.open(filename, "w") do |file|
         # iterate over the array of students
         @students.each do |student|
-            csv_line = [student[:name], student[:cohort]].join(",")
+            csv_line = [student[:name], student[:cohort], student[:country]].join(",")
             file.puts csv_line 
         end
     end
@@ -150,7 +179,7 @@ def load_students(filename)
         @students << {name: name, cohort: cohort.to_sym}
     end
     puts "Loaded #{@students.count} students from #{filename} file"
- end
+end
 
 # load the students from a file specified in the command line
 def try_load_students(filename = "students.csv")
@@ -162,7 +191,6 @@ def try_load_students(filename = "students.csv")
     
     if File.exists?(filename) # check if file exists
         load_students(filename)
-        #puts "Loaded #{@students.count} students from #{filename} file"
     else
         puts "Sorry, #{filename} does not exist!"
         exit # quit the program
